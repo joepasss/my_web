@@ -2,4 +2,5 @@
 *.swp
 
 uploads/
+photos/
 node_modules/
