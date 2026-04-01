@@ -11,7 +11,7 @@ export const getPhotos = async (_: Request, res: Response) => {
     const result = await pool.query('SELECT * FROM photos ORDER BY created_at DESC');
     const photos: Photo[] = result.rows.map((photo: any) => ({
       ...photo,
-      url: `${SERVER_URL}:${PORT}/${photo.filename}`
+      url: `${SERVER_URL}:${PORT}/files/photos/${photo.filename}`
     }));
 
     sendResponse<Photo[]>(res, 200, 'success', photos);
@@ -31,7 +31,7 @@ export const getPhoto = async (req: Request, res: Response) => {
 
     const photo: Photo = {
       ...result.rows[0],
-      url: `${SERVER_URL}:${PORT}/${result.rows[0].filename}`
+      url: `${SERVER_URL}:${PORT}/files/photos/${result.rows[0].filename}`
     }
 
     sendResponse(res, 200, "success", photo)

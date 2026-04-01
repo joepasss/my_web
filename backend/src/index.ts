@@ -9,7 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(process.cwd(), 'uploads')));
+app.use('/files/photos', express.static(path.join(process.cwd(), 'photos')));
 
 app.use('/api/admin', adminRouter);
 app.use('/api', publicRouter);

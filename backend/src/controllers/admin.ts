@@ -61,7 +61,7 @@ export const updatePhoto = async (req: Request, res: Response) => {
 
     const updatedPhoto: Photo = {
       ...result.rows[0],
-      url: `${SERVER_URL}:${PORT}/${result.rows[0].filename}`
+      url: `${SERVER_URL}:${PORT}/files/photos/${result.rows[0].filename}`
     }
 
     sendResponse(res, 200, "update success", updatedPhoto);
@@ -84,7 +84,7 @@ export const uploadPhoto = async (req: Request, res: Response) => {
     const result = await pool.query(query, values);
     const newPhoto: Photo = {
       ...result.rows[0],
-      url: `${SERVER_URL}:${PORT}/${result.rows[0].filename}`
+      url: `${SERVER_URL}:${PORT}/files/photos/${result.rows[0].filename}`
     }
 
     sendResponse(res, 200, "success", newPhoto);
@@ -105,7 +105,7 @@ export const deletePhoto = async (req: Request, res: Response) => {
     }
 
     const { filename } = selectResult.rows[0];
-    const filePath = path.join(process.cwd(), 'uploads', filename);
+    const filePath = path.join(process.cwd(), 'photos', filename);
 
     await pool.query('DELETE FROM photos WHERE id = $1', [id]);
 
