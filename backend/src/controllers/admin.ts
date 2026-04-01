@@ -10,11 +10,7 @@ import { pool } from "@db";
 
 
 export const login = async (req: Request, res: Response) => {
-  if (!req.body) {
-    return sendResponse(res, 400, "Password is required", null);
-  }
-
-  const { password } = req.body;
+  const { password } = req.body || {};
 
   if (!password) {
     return sendResponse(res, 400, "Password is required", null);
@@ -36,11 +32,26 @@ export const login = async (req: Request, res: Response) => {
 
 export const updatePhoto = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const { filename } = req.body;
+    const { id } = req.params || {};
 
-    const query = 'UPDATE photos SET filename = $1 WHERE id = $2 RETURNING *';
-    const values = [filename, id];
+    const allowedfields: string[] = [];
+    const updateData: Record<string, any> = {};
+    Object.keys(req.body).forEach((key) => {
+      if (allowedfields.includes(key)) {
+        updateData[key] = req.body[key];
+      }
+    });
+
+    const keys = Object.keys(updateData);
+
+    if (keys.length === 0) return sendResponse(res, 400, "no data to update", null);
+
+    const setClause = keys
+      .map((key, index) => `${key} = $${index + 1}`)
+      .join(', ');
+
+    const query = `UPDATE photos SET ${setClause} WHERE id = $${keys.length + 1} RETURNING *`;
+    const values = [...Object.values(updateData), id];
 
     const result = await pool.query(query, values);
 
@@ -84,7 +95,7 @@ export const uploadPhoto = async (req: Request, res: Response) => {
 
 export const deletePhoto = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params || {};
 
     const selectQuery = 'SELECT filename FROM photos WHERE id = $1';
     const selectResult = await pool.query(selectQuery, [id]);
@@ -93,15 +104,19 @@ export const deletePhoto = async (req: Request, res: Response) => {
       return sendResponse(res, 404, 'cannot get file', null)
     }
 
-    const filename = selectResult.rows[0].filename;
+    const { filename } = selectResult.rows[0];
     const filePath = path.join(process.cwd(), 'uploads', filename);
 
     await pool.query('DELETE FROM photos WHERE id = $1', [id]);
 
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-      console.log(`remove file :${filename}`);
+    try {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    } catch (fileErr) {
+      console.error(`file deletion failed for ${filename}:`, fileErr);
     }
+
     sendResponse(res, 200, 'delete', null);
   } catch (err) {
     console.error('DELETE ERROR:', err);
