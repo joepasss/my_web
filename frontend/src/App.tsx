@@ -5,7 +5,9 @@ import { TOKEN_NAME } from "@api";
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const token = localStorage.getItem(TOKEN_NAME);
-  if (!token) return <Navigate to="/login" replace />;
+  if (!token || token === "undefined" || token === "null")
+    return <Navigate to="/login" replace />;
+
   return <>{children}</>;
 };
 

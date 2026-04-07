@@ -8,6 +8,7 @@ import path from "path";
 import { adminRouter, publicRouter } from "@routes";
 import { PORT, SERVER_URL } from "@config";
 import { sendResponse } from "@utils";
+import { photoUploadDir } from "@middleware";
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(
   "/files/photos",
-  express.static(path.join(process.cwd(), "files/photos")),
+  express.static(path.join(process.cwd(), photoUploadDir)),
 );
 
 app.use("/api/admin", adminRouter);
