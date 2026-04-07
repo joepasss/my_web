@@ -2,9 +2,8 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
-    "baseUrl": ".",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "paths": {
       "@utils": ["./src/utils"],
       "@types": ["./src/types"],
@@ -19,8 +18,8 @@
     // See also https://aka.ms/tsconfig/module
     "module": "ESNext",
     "target": "esnext",
-    "moduleResolution": "node",
-    "types": [],
+    "lib": ["esnext"],
+    "types": ["node"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
