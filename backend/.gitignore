@@ -1,5 +1,7 @@
 .env
 *.swp
+*@*
+*.log
 
 uploads/
 photos/
