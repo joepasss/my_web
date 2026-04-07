@@ -4,3 +4,5 @@
 uploads/
 photos/
 node_modules/
+dist/
+files/
