@@ -1,11 +1,10 @@
+import { STATIC_PATHS } from "@config";
 import multer from "multer";
 import path from "path";
 
-export const photoUploadDir = "files/photos";
-
-const storage = multer.diskStorage({
+const photoStorage = multer.diskStorage({
   destination: (_, __, cb) => {
-    cb(null, photoUploadDir);
+    cb(null, STATIC_PATHS.PHOTOS);
   },
   filename: (_, file, cb) => {
     const uniqueSuffix = Math.round(Math.random() * 1e9);
@@ -14,5 +13,5 @@ const storage = multer.diskStorage({
 });
 
 export const photoUpload = multer({
-  storage,
+  storage: photoStorage,
 });

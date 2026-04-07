@@ -4,20 +4,15 @@ import express, {
   type NextFunction,
 } from "express";
 import cors from "cors";
-import path from "path";
 import { adminRouter, publicRouter } from "@routes";
-import { PORT, SERVER_URL } from "@config";
+import { PORT, SERVER_URL, UPLOAD_ROOT } from "@config";
 import { sendResponse } from "@utils";
-import { photoUploadDir } from "@middleware";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(
-  "/files/photos",
-  express.static(path.join(process.cwd(), photoUploadDir)),
-);
+app.use("/api/files", express.static(UPLOAD_ROOT));
 
 app.use("/api/admin", adminRouter);
 app.use("/api", publicRouter);
