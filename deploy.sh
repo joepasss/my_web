@@ -1,28 +1,11 @@
 #!/bin/sh
 
-PROJECT_DIR=""
-
-print_usage() {
-	echo "Usage : $0 -d [project root dir]"
-	echo "    -d: project root dir path"
-}
-
-while [ $# -gt 0 ]; do
-	case "$1" in
-	-d)
-		PROJECT_DIR="$2"
-		shift 2
-		;;
-	*)
-		print_usage
-		exit 1
-		;;
-	esac
-done
-
-##### backend #####
+PROJECT_DIR=$(dirname "$(readlink -f "$0")")
 BACKEND_ROOT="$PROJECT_DIR/backend"
 
+ENV="$(uname)"
+
+##### backend #####
 if [ ! -f "$BACKEND_ROOT/package.json" ]; then
 	echo "invalid backend project dir"
 	exit 1
@@ -37,6 +20,11 @@ fi
 
 if [ -d "$BACKEND_ROOT/dist" ]; then
 	rm -rf "$BACKEND_ROOT/dist"
+fi
+
+if ! npm run db:init; then
+	echo "db initialize failed"
+	exit 1
 fi
 
 if ! npm run build; then
@@ -78,9 +66,9 @@ fi
 NGINX_CONF_SOURCE="$BACKEND_ROOT/nginx/nginx.conf"
 NGINX_DEST=""
 
-if [ "$(uname)" = "Linux" ]; then
+if [ "$ENV" = "Linux" ]; then
 	NGINX_DEST="/etc/nginx/conf.d"
-elif [ "$(uname)" = "FreeBSD" ]; then
+elif [ "$ENV" = "FreeBSD" ]; then
 	NGINX_DEST="/usr/local/etc/nginx/conf.d"
 else
 	echo "unsupported os"
@@ -101,19 +89,41 @@ fi
 sed "s|{{FULL_UPLOAD_PATH}}|$V_UPLOAD|g" "$NGINX_CONF_SOURCE" >"/tmp/backend_nginx.conf"
 
 if [ ! -d "$NGINX_DEST" ]; then
-	doas mkdir -p "$NGINX_DEST"
+	mkdir -p "$NGINX_DEST"
 fi
 
-doas install -m 644 "/tmp/backend_nginx.conf" "$NGINX_DEST/backend.conf"
-rm "/tmp/backend_nginx.conf"
+if [ "$ENV" = "Linux" ]; then
+	doas install -m 644 "/tmp/backend_nginx.conf" "$NGINX_DEST/backend.conf"
+	rm "/tmp/backend_nginx.conf"
 
-if ! doas nginx -t; then
-	echo "nginx syntax error"
-	exit 1
-fi
+	if ! doas nginx -t; then
+		echo "nginx syntax error"
+		pm2 delete "backend" >/dev/null 2>&1
+		exit 1
+	fi
 
-if ! doas nginx -s reload; then
-	echo "nginx reload error"
+	if ! doas nginx -s reload; then
+		echo "nginx reload error"
+		pm2 delete "backend" >/dev/null 2>&1
+		exit 1
+	fi
+elif [ "$ENV" = "FreeBSD" ]; then
+	install -m 644 "/tmp/backend_nginx.conf" "$NGINX_DEST/backend.conf"
+	rm "/tmp/backend_nginx.conf"
+
+	if ! nginx -t; then
+		echo "nginx syntax error"
+		pm2 delete "backend" >/dev/null 2>&1
+		exit 1
+	fi
+
+	if ! service nginx reload; then
+		echo "nginx reload error"
+		pm2 delete "backend" >/dev/null 2>&1
+		exit 1
+	fi
+else
+	echo "unsupported os"
 	exit 1
 fi
 
