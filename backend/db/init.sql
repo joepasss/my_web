@@ -1,7 +1,0 @@
-DROP TABLE IF EXISTS photos;
-
-CREATE TABLE photos (
-    id SERIAL PRIMARY KEY,
-    filename TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
