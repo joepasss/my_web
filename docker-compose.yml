@@ -1,0 +1,14 @@
+services:
+  backend:
+    user: "1002:1002"
+    build:
+      context: ./backend
+      args:
+        - PORT=${PORT}
+        - UPLOAD_PATH=${UPLOAD_PATH}
+    env_file:
+      - .env
+    volumes:
+      - /mnt/dev:${UPLOAD_PATH}
+    ports:
+      - "${PORT}:${PORT}"
