@@ -1,7 +1,7 @@
 import { type Request, type Response } from "express";
 
 import { sendResponse } from "@utils";
-import { PORT, SERVER_URL } from "@config";
+import { ASSET_SERVER_ADDR, STATIC_PATHS } from "@config";
 import type { Photo } from "@types";
 import { pool } from "@db";
 
@@ -12,7 +12,7 @@ export const getPhotos = async (_: Request, res: Response) => {
     );
     const photos: Photo[] = result.rows.map((photo: any) => ({
       ...photo,
-      url: `${SERVER_URL}:${PORT}/files/photos/${photo.filename}`,
+      url: `${ASSET_SERVER_ADDR}${STATIC_PATHS.PHOTOS}/${photo.filename}`,
     }));
 
     sendResponse<Photo[]>(res, 200, "success", photos);
@@ -32,7 +32,7 @@ export const getPhoto = async (req: Request, res: Response) => {
 
     const photo: Photo = {
       ...result.rows[0],
-      url: `${SERVER_URL}:${PORT}/files/photos/${result.rows[0].filename}`,
+      url: `${ASSET_SERVER_ADDR}${STATIC_PATHS.PHOTOS}/${result.rows[0].filename}`,
     };
 
     sendResponse(res, 200, "success", photo);
