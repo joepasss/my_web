@@ -4,7 +4,12 @@ import fs from "fs";
 import jwt from "jsonwebtoken";
 
 import { sendResponse } from "@utils";
-import { PORT, SERVER_URL, ADMIN_PASSWORD, JWT_SECRET } from "@config";
+import {
+  ADMIN_PASSWORD,
+  JWT_SECRET,
+  ASSET_SERVER_ADDR,
+  STATIC_PATHS,
+} from "@config";
 import type { Photo } from "@types";
 import { pool } from "@db";
 
@@ -60,7 +65,7 @@ export const updatePhoto = async (req: Request, res: Response) => {
 
     const updatedPhoto: Photo = {
       ...result.rows[0],
-      url: `${SERVER_URL}:${PORT}/files/photos/${result.rows[0].filename}`,
+      url: `${ASSET_SERVER_ADDR}${STATIC_PATHS.PHOTOS}/${result.rows[0].filename}`,
     };
 
     sendResponse(res, 200, "update success", updatedPhoto);
@@ -83,7 +88,7 @@ export const uploadPhoto = async (req: Request, res: Response) => {
     const result = await pool.query(query, values);
     const newPhoto: Photo = {
       ...result.rows[0],
-      url: `${SERVER_URL}:${PORT}/files/photos/${result.rows[0].filename}`,
+      url: `${ASSET_SERVER_ADDR}${STATIC_PATHS.PHOTOS}/${result.rows[0].filename}`,
     };
 
     sendResponse(res, 200, "success", newPhoto);
