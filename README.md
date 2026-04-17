@@ -4,9 +4,8 @@
 
 ### TODO (urgent)
 
-* Dockerlize backend
-* Connect to NEW db server
-* db server initailze
+* deploy backend (local)
+* FIX FRONTEND (please)
 
 ### @@@TODO
 
