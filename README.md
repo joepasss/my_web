@@ -1,20 +1,29 @@
 ### my_web
 
-: photo, music share web
+: "MY WEB"
 
 ### TODO (urgent)
 
-* deploy backend (local)
-* FIX FRONTEND (please)
+* FRONTEND
+    * webpack
+    * photos page (landing)
+    * photo page
+    * login page (admin)
+    * post (upload) + delete page (admin page?)
 
-### @@@TODO
+#### @@@TODO
 
-: add music share function
+* article (.md)
+    * filter (date, tags)
+* music (.wav)
+    * filter (date, tags)
+* photos
+    * Raw file share
+    * generate thumbnail
+    * read photo metadata
+    * filter (date, time etc)
+* git repository
+    * github mirror
+* multi-upload, download
+* domain name
 
-* backend
-    * @fix cannot build (index.js)
-    * nginx
-    * add functions
-        * thumbnail
-        * multi-upload
-        * multi-download
