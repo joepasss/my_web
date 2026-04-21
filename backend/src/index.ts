@@ -5,7 +5,7 @@ import express, {
 } from "express";
 import cors from "cors";
 import { adminRouter, publicRouter } from "@routes";
-import { PORT, SERVER_URL, UPLOAD_ROOT } from "@config";
+import { PORT, UPLOAD_ROOT } from "@config";
 import { sendResponse } from "@utils";
 
 const app = express();
@@ -29,5 +29,5 @@ app.use((err: any, _: Request, res: Response, __: NextFunction) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`server running on ${SERVER_URL}:${PORT}`);
+  console.log(`server running on ${PORT}`);
 });

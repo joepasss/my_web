@@ -9,6 +9,6 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/dev:${UPLOAD_PATH}
+      - ${MOUNT_POINT}:${UPLOAD_PATH}
     ports:
       - "${PORT}:${PORT}"

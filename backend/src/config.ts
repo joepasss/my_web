@@ -11,7 +11,6 @@ const ENV_VARS = [
   "DB_PASSWORD",
   "DB_PORT",
   "PORT",
-  "SERVER_URL",
   "JWT_SECRET",
   "ADMIN_PASSWORD",
   "UPLOAD_PATH",
@@ -36,7 +35,6 @@ export const DB_CONFIG = {
 
 export const UPLOAD_ROOT = process.env.UPLOAD_PATH!;
 export const PORT = process.env.PORT;
-export const SERVER_URL = process.env.SERVER_URL;
 export const JWT_SECRET = process.env.JWT_SECRET;
 export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 export const ASSET_SERVER_ADDR = process.env.ASSET_SERVER_ADDR;
