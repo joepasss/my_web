@@ -1,4 +1,6 @@
-dist/*
-
 *.swp
 *.env
+*.log
+
+node_modules/
+dist/
